@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Montserrat:wght@400;600;700&display=swap');
+@import "tailwindcss";
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Font Families */
+.font-barlow {
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+.font-caveat {
+  font-family: 'Caveat', cursive;
+}
+
+.font-handlee {
+  font-family: 'Handlee', cursive;
+}
+
+.font-lexend {
+  font-family: 'Lexend', sans-serif;
+}
+
+.font-opensans {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.font-roboto {
+  font-family: 'Roboto', sans-serif;
+}
+
+.font-tiktok {
+  font-family: 'TikTok Sans', sans-serif;
+}
+
+/* Stylish Handwriting */
+.title-elegant {
+  font-family: 'Caveat', cursive;
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  color: #1a1a1a;
+}
+
+.subtitle-elegant {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  letter-spacing: 0.03em;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.08);
+  color: #4b5563;
+}
+
+@media (min-width: 768px) {
+  .title-elegant {
+    font-size: 4.5rem;
+  }
+
+  .subtitle-elegant {
+    font-size: 1.875rem;
+  }
+}
+
+/* Vue Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}

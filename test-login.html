@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login Welcome</title>
+    <script>
+        // Simulate login by setting localStorage
+        function simulateLogin() {
+            const memberName = prompt('Masukkan nama member:', 'John Doe');
+            if (memberName) {
+                localStorage.setItem('memberToken', 'fake_token_' + Date.now());
+                localStorage.setItem('memberName', memberName);
+                localStorage.setItem('memberEmail', 'test@example.com');
+                localStorage.setItem('memberId', '123');
+                
+                alert('Login data saved to localStorage. Redirect to login page now.');
+                window.location.href = 'http://localhost:3000/login-pelanggan';
+            }
+        }
+        
+        function clearLogin() {
+            localStorage.removeItem('memberToken');
+            localStorage.removeItem('memberName');
+            localStorage.removeItem('memberEmail');
+            localStorage.removeItem('memberId');
+            alert('Login data cleared from localStorage');
+        }
+        
+        function checkLogin() {
+            const token = localStorage.getItem('memberToken');
+            const name = localStorage.getItem('memberName');
+            alert('Token: ' + (token ? 'EXISTS' : 'NULL') + '\nName: ' + (name || 'NULL'));
+        }
+    </script>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+    <h1>Test Login Welcome Page</h1>
+    
+    <div style="margin: 20px 0; padding: 20px; background: #f0f0f0; border-radius: 8px;">
+        <h2>Instructions:</h2>
+        <ol>
+            <li>Click "Simulate Login" button below</li>
+            <li>Enter your name in the prompt</li>
+            <li>You will be redirected to login page</li>
+            <li>The page should display welcome message instead of login form</li>
+        </ol>
+    </div>
+    
+    <div style="margin: 20px 0;">
+        <button 
+            onclick="simulateLogin()" 
+            style="padding: 10px 20px; font-size: 16px; background: #22c55e; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;">
+            Simulate Login
+        </button>
+        
+        <button 
+            onclick="checkLogin()" 
+            style="padding: 10px 20px; font-size: 16px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;">
+            Check Login Status
+        </button>
+        
+        <button 
+            onclick="clearLogin()" 
+            style="padding: 10px 20px; font-size: 16px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Clear Login Data
+        </button>
+    </div>
+    
+    <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
+        <h3>What to test:</h3>
+        <ul>
+            <li>After clicking "Simulate Login", check if welcome message shows (not login form)</li>
+            <li>Check browser console (F12) for console.log messages</li>
+            <li>Verify member name displays in "Selamat Datang, {name}!"</li>
+            <li>Check if "Mulai Belanja" and "Logout" buttons appear</li>
+            <li>Try refreshing page - welcome should persist (localStorage check)</li>
+            <li>Click "Logout" - should return to login form</li>
+        </ul>
+    </div>
+</body>
+</html>
