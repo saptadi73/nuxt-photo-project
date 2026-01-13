@@ -12,8 +12,8 @@
             </svg>
           </button>
           <div>
-            <h1 class="text-4xl lg:text-5xl font-black font-caveat text-slate-900 tracking-tight">Daftar Order</h1>
-            <p class="text-gray-500 font-caveat text-lg">Pesanan Fotomu dan Follow-up Pembayaran</p>
+            <h1 class="text-2xl lg:text-5xl font-black font-caveat text-slate-900 tracking-tight">Daftar Order</h1>
+            <p class="text-gray-500 font-caveat text-xl lg:text-2xl">Pesanan Fotomu dan Follow-up Pembayaran</p>
           </div>
         </div>
       </div>

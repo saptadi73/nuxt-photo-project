@@ -3,8 +3,8 @@
     <div class="max-w-7xl mx-auto">
       <div class="mb-8 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
         <div class="flex flex-col gap-2">
-          <h1 class="text-3xl font-bold text-gray-900">CMS Foto</h1>
-          <p class="text-sm text-gray-600">Kelola foto: tambah, edit, hapus, dengan pencarian dan pagination.</p>
+          <h1 class="text-2xl lg:text-5xl font-caveat font-bold text-gray-900">CMS Foto</h1>
+          <p class="text-xl lg:text-2xl font-caveat text-gray-600">Kelola foto: tambah, edit, hapus, dengan pencarian dan pagination.</p>
         </div>
         <button
           @click="handleLogout"

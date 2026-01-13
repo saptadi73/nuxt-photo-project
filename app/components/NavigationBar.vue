@@ -63,6 +63,42 @@
             </NuxtLink>
           </div>
         </div>
+
+        <!-- Paket Sewa Dropdown Menu -->
+        <div class="relative">
+          <button
+            @click="isPaketDropdownOpen = !isPaketDropdownOpen"
+            class="px-4 py-4 text-sm font-medium transition-all duration-200 tracking-wide rounded-md flex items-center gap-2"
+            :class="isPaketDropdownOpen
+              ? 'bg-slate-900 text-white shadow-sm shadow-slate-900/20'
+              : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'"
+          >
+            PAKET SEWA
+            <svg
+              class="w-4 h-4 transition-transform duration-200"
+              :class="{ 'rotate-180': isPaketDropdownOpen }"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div
+            v-show="isPaketDropdownOpen"
+            class="absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+          >
+            <NuxtLink
+              v-for="item in paketMenuItems"
+              :key="item.name"
+              :to="item.href"
+              class="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-all duration-200 border-b border-gray-100 last:border-b-0"
+              @click="isPaketDropdownOpen = false"
+            >
+              {{ item.name }}
+            </NuxtLink>
+          </div>
+        </div>
         
         <!-- Pemesanan Dropdown Menu -->
         <div class="relative">
@@ -226,6 +262,36 @@
             </NuxtLink>
           </div>
         </div>
+
+        <!-- Paket Sewa Menu Mobile -->
+        <div class="border-b border-gray-200">
+          <button
+            @click="isPaketDropdownOpenMobile = !isPaketDropdownOpenMobile"
+            class="w-full px-6 py-4 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all duration-200 tracking-wide flex items-center justify-between"
+          >
+            PAKET SEWA
+            <svg
+              class="w-4 h-4 transition-transform duration-200"
+              :class="{ 'rotate-180': isPaketDropdownOpenMobile }"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div v-show="isPaketDropdownOpenMobile" class="bg-gray-50">
+            <NuxtLink
+              v-for="item in paketMenuItems"
+              :key="item.name"
+              :to="item.href"
+              class="block px-10 py-3 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-200"
+              @click="isOpen = false; isPaketDropdownOpenMobile = false"
+            >
+              {{ item.name }}
+            </NuxtLink>
+          </div>
+        </div>
         
         <!-- Pemesanan Menu Mobile -->
         <div class="border-b border-gray-200">
@@ -309,6 +375,8 @@ const isUserDropdownOpen = ref(false);
 const isUserDropdownOpenMobile = ref(false);
 const isCmsDropdownOpen = ref(false);
 const isCmsDropdownOpenMobile = ref(false);
+const isPaketDropdownOpen = ref(false);
+const isPaketDropdownOpenMobile = ref(false);
 const isBelanjaDropdownOpen = ref(false);
 const isBelanjaDropdownOpenMobile = ref(false);
 const route = useRoute();
@@ -322,13 +390,18 @@ const navItems = [
   { name: 'TENTANG JUDY', href: '/tentang-judy' },
   { name: 'INSTAGRAM', href: 'https://www.instagram.com/judynad/' },
   { name: 'INTERIOR', href: '/interior' },
-  { name: 'PAKET SEWA', href: '#' },
   { name: 'ORDER', href: '/orders' },
 ];
 
 const cmsMenuItems = [
   { name: 'Foto', href: '/cms-foto' },
   { name: 'Kategori', href: '/cms-kategori' },
+  { name: 'Paket Sewa', href: '/paket-sewa' },
+];
+
+const paketMenuItems = [
+  { name: 'Pesan Paket Sewa', href: '/pesan-paket-sewa' },
+  { name: 'Daftar Sewa Foto', href: '/daftar-sewa-foto' },
 ];
 
 const belanjaMenuItems = [

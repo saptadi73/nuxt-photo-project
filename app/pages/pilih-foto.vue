@@ -3,8 +3,8 @@
     <header class="bg-white shadow-sm sticky top-0 z-40">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
         <div>
-          <h1 class="text-5xl lg:text-7xl font-black font-caveat text-slate-900 tracking-tight">Gallery</h1>
-          <p class="text-gray-500 font-caveat text-xl">Dalam Banyak Kategori</p>
+          <h1 class="text-2xl lg:text-5xl font-black font-caveat text-slate-900 tracking-tight">Gallery</h1>
+          <p class="text-gray-500 font-caveat text-xl lg:text-2xl">Dalam Banyak Kategori</p>
         </div>
         <div class="flex items-center gap-4">
           <div class="text-right mr-2">

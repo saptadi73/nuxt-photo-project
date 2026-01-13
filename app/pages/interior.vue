@@ -3,8 +3,8 @@
     <!-- Hero Section -->
     <div class="bg-gradient-to-b from-slate-900 to-slate-800 py-16 px-4">
       <div class="max-w-6xl mx-auto text-center">
-        <h1 class="text-4xl md:text-7xl font-bold font-caveat text-white mb-4">Interior Design</h1>
-        <p class="text-3xl font-caveat text-gray-300 max-w-2xl mx-auto">
+        <h1 class="text-3xl md:text-5xl font-bold font-caveat text-white mb-4">Interior Design</h1>
+        <p class="text-2xl lg:text-3xl font-caveat text-gray-300 max-w-2xl mx-auto">
           Koleksi karya fotografi untuk melengkapi desain interior Hotel dan Perkantoran yang elegan dan timeless
         </p>
       </div>

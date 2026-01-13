@@ -3,8 +3,8 @@
     <!-- Header Section -->
     <div class="bg-gradient-to-b from-slate-900 to-slate-800 py-12 px-4">
       <div class="max-w-4xl mx-auto text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">Syarat dan Ketentuan</h1>
-        <p class="text-gray-300">Belanja Digital Judynata Fotografi</p>
+        <h1 class="text-4xl font-caveat md:text-5xl font-bold text-white mb-2">Syarat dan Ketentuan</h1>
+        <p class="text-gray-300 font-caveat lg:text-2xl text-xl">Pembelian Judynata Fotografi</p>
       </div>
     </div>
 
@@ -14,7 +14,7 @@
         <!-- Intro -->
         <div class="mb-8 text-gray-700 leading-relaxed">
           <p class="text-lg font-semibold text-slate-900 mb-6">
-            Berikut adalah syarat dan ketentuan belanja digital di Judynata Fotografi:
+            Berikut adalah syarat dan ketentuan pembelian di Judynata Fotografi:
           </p>
         </div>
 
