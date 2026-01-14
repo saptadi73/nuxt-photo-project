@@ -2,8 +2,8 @@
   <div class="min-h-screen bg-gray-50">
     <header class="bg-white shadow-sm border-b border-gray-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-2">
-        <h1 class="text-3xl font-black text-slate-900">Daftar Sewa Foto</h1>
-        <p class="text-gray-600">Lihat riwayat pesanan paket sewa Anda.</p>
+        <h1 class="text-3xl lg:text-5xl font-caveat font-black text-slate-900">Daftar Sewa Foto</h1>
+        <p class="text-gray-600 text-2xl lg:text-3xl font-caveat">Lihat riwayat pesanan paket sewa Anda.</p>
       </div>
     </header>
 
@@ -203,9 +203,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
+import { useRuntimeConfig, useNuxtApp } from '#app'
 
 const config = useRuntimeConfig()
+const { $axios } = useNuxtApp()
 const BASE_URL = config.public.apiBaseUrl || 'http://localhost:8000'
 
 const orders = ref<any[]>([])
@@ -255,17 +257,24 @@ const prefillBuyer = () => {
   if (typeof window === 'undefined') return
   buyer.id_member = localStorage.getItem('memberId') || ''
   buyer.nama = localStorage.getItem('memberName') || ''
+  console.log('Member ID:', buyer.id_member)
 }
 
 const loadOrders = async () => {
-  if (!buyer.id_member) return
+  if (!buyer.id_member) {
+    isLoading.value = false
+    return
+  }
 
   try {
     isLoading.value = true
-    const res = await fetch(`${BASE_URL}/rental-orders/member/${buyer.id_member}`, {
-      headers: getAuthHeaders() as HeadersInit,
+    console.log('Fetching orders for member:', buyer.id_member)
+    
+    const { data: result } = await $axios.get(`/rental-orders/member/${buyer.id_member}`, {
+      headers: getAuthHeaders()
     })
-    const result = await res.json()
+    
+    console.log('Orders response:', result)
     orders.value = Array.isArray(result) ? result : (result.data || [])
   } catch (err) {
     console.error('Load rental orders error', err)
@@ -279,10 +288,11 @@ const viewDetail = async (order: any) => {
   isLoadingDetail.value = true
 
   try {
-    const res = await fetch(`${BASE_URL}/rental-orders/${order.id}`, {
-      headers: getAuthHeaders() as HeadersInit,
+    const { data: result } = await $axios.get(`/rental-orders/${order.id}`, {
+      headers: getAuthHeaders()
     })
-    const result = await res.json()
+    
+    console.log('Order detail response:', result)
     const detailData = result.data || result
     if (detailData) {
       selectedOrder.value = detailData
@@ -293,8 +303,6 @@ const viewDetail = async (order: any) => {
     isLoadingDetail.value = false
   }
 }
-
-import { reactive } from 'vue'
 
 onMounted(() => {
   prefillBuyer()
