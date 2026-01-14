@@ -175,7 +175,8 @@ const memberStorageKeys = [
   'memberKodePos'
 ]
 
-const apiBaseUrl = process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
+const config = useRuntimeConfig()
+const apiBaseUrl = config.public.apiBaseUrl
 
 const errorCount = computed(() => logs.value.filter(l => l.level === 'error').length)
 const warningCount = computed(() => logs.value.filter(l => l.level === 'warn').length)

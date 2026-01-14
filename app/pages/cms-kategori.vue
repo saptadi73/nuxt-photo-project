@@ -84,7 +84,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div v-if="kategori.url_foto" class="h-12 w-12 rounded overflow-hidden bg-gray-100">
-                    <img :src="`http://localhost:8000${kategori.url_foto}`" :alt="kategori.nama" class="h-full w-full object-cover">
+                    <img :src="`${apiBaseUrl}${kategori.url_foto}`" :alt="kategori.nama" class="h-full w-full object-cover">
                   </div>
                   <div v-else class="h-12 w-12 rounded bg-gray-200 flex items-center justify-center">
                     <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -334,6 +334,8 @@ import { useRouter, useNuxtApp } from '#app';
 
 const router = useRouter();
 const { $axios } = useNuxtApp();
+const config = useRuntimeConfig();
+const apiBaseUrl = config.public.apiBaseUrl;
 
 interface Kategori {
   id: string;
@@ -485,7 +487,7 @@ const openEditModal = (kat: Kategori) => {
     url_foto: null
   };
   
-  const previewUrl = kat.url_foto ? `http://localhost:8000${kat.url_foto}` : '';
+  const previewUrl = kat.url_foto ? `${apiBaseUrl}${kat.url_foto}` : '';
   fotoPreview.value = previewUrl;
   
   console.log('Edit modal opened:', {

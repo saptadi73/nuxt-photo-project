@@ -128,6 +128,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useDebugLogger } from '~/composables/useDebugLogger'
 
 const logger = useDebugLogger('LoginPelanggan')
+const config = useRuntimeConfig()
 
 const isLoggedIn = ref(false)
 const memberName = ref('')
@@ -176,11 +177,11 @@ const handleLogin = async () => {
 
   logger.info('Login attempt started', { 
     email: loginForm.value.email,
-    apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
+    apiBaseUrl: config.public.apiBaseUrl
   })
 
   try {
-    const apiBaseUrl = process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
+    const apiBaseUrl = config.public.apiBaseUrl
     const loginUrl = `${apiBaseUrl}/member/login`
     
     logger.debug('LOGIN REQUEST', {
@@ -353,14 +354,14 @@ const handleLogin = async () => {
       errorType: error instanceof Error ? error.constructor.name : typeof error,
       errorMessage: error instanceof Error ? error.message : String(error),
       errorStack: error instanceof Error ? error.stack : 'no stack',
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+      apiBaseUrl: config.public.apiBaseUrl,
       ...errorDetails
     })
 
     console.error('%c❌ LOGIN FAILED - Network/Connection Error', 'color: #ff0000; font-weight: bold; font-size: 14px;', {
       error: error,
       errorMessage: errorMsg,
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+      apiBaseUrl: config.public.apiBaseUrl,
       timestamp: new Date().toISOString()
     })
 
