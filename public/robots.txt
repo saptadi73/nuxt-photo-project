@@ -1,2 +1,16 @@
 User-Agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /cms-*
+Disallow: /kelola-*
+Disallow: /daftar-*
+Disallow: /*.json$
+Disallow: /*.js$
+
+Sitemap: https://judy-sewa-foto.com/sitemap.xml
+
+User-Agent: Googlebot
+Allow: /
+
+User-Agent: Bingbot
+Allow: /

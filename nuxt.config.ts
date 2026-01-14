@@ -5,6 +5,12 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ['assets/css/main.css'],
+  imports: {
+    autoImport: true,
+  },
+  nitro: {
+    preset: 'node-server',
+  },
   runtimeConfig: {
     public: {
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8080',
@@ -12,7 +18,55 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      htmlAttrs: {
+        lang: 'id'
+      },
+      meta: [
+        {
+          name: 'description',
+          content: 'Judy Sewa Foto - Rental alat fotografi profesional dan jasa pemotretan'
+        },
+        {
+          name: 'keywords',
+          content: 'sewa foto, rental kamera, studio foto, fotografer, pemotretan'
+        },
+        {
+          name: 'author',
+          content: 'Judy Photography'
+        },
+        {
+          property: 'og:title',
+          content: 'Judy Sewa Foto - Rental Alat Fotografi'
+        },
+        {
+          property: 'og:description',
+          content: 'Layanan sewa alat fotografi profesional dan jasa pemotretan berkualitas tinggi'
+        },
+        {
+          property: 'og:type',
+          content: 'website'
+        },
+        {
+          name: 'robots',
+          content: 'index, follow'
+        },
+        {
+          name: 'google-site-verification',
+          content: 'YOUR_GOOGLE_VERIFICATION_CODE'
+        }
+      ],
       link: [
+        {
+          rel: 'canonical',
+          href: 'https://judy-sewa-foto.com'
+        },
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: '/favicon.ico'
+        },
         {
           rel: 'preconnect',
           href: 'https://fonts.googleapis.com'

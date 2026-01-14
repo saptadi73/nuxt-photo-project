@@ -147,9 +147,21 @@
 
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted } from 'vue'
+import { useSEO } from '~/composables/useSEO';
+import heroImage from '~/assets/images/cityscape1.jpg';
+
 
 const config = useRuntimeConfig()
 const BASE_URL = config.public.apiBaseUrl || 'http://localhost:8000'
+// SEO Setup
+useSEO({
+  title: 'Paket Sewa | Judynata Fotografi',
+  description: 'Menyelami ruang hening, di mana cahaya hitam putih merangkum emosi yang tidak terucap. Empat hal dibawah ini merangkum lintasan ide Judynata tentang solitude, abstraksi, dan ketulusan visual.',
+  keywords: 'keheningan, hitam putih, fotografi, judynata, solitude, abstraksi, visual, seni, makna, emosi',
+  image: heroImage,
+  url: 'https://judynatafotografi.com/',
+  type: 'website'
+});
 
 const packages = ref<any[]>([])
 const isLoading = ref(true)

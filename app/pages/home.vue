@@ -85,11 +85,22 @@
 </template>
 
 <script setup lang="ts">
+import { useSEO } from '~/composables/useSEO';
 import heroImage from '~/assets/images/cityscape1.jpg';
 import hitamPutihImage from '~/assets/images/cityscape3.jpg';
 import judynataImage from '~/assets/images/cityscape5.jpg';
 import cityimage from '~/assets/images/cityscape6.jpg';
 import nature from '~/assets/images/nature.jpg';
+
+// SEO Setup
+useSEO({
+  title: 'Beranda | Judynata Fotografi',
+  description: 'Menyelami ruang hening, di mana cahaya hitam putih merangkum emosi yang tidak terucap. Empat hal dibawah ini merangkum lintasan ide Judynata tentang solitude, abstraksi, dan ketulusan visual.',
+  keywords: 'keheningan, hitam putih, fotografi, judynata, solitude, abstraksi, visual, seni, makna, emosi',
+  image: heroImage,
+  url: 'https://judynatafotografi.com/',
+  type: 'website'
+});
 
 const articles = [
   {

@@ -35,7 +35,18 @@
 </template>
 
 <script setup lang="ts">
+  import { useSEO } from '~/composables/useSEO';
 import judyPortrait from '~/assets/images/judy.jpeg';
+
+  // SEO Setup
+useSEO({
+  title: 'Interior | Judynata Fotografi',
+  description: 'Perjalanan visual yang lahir dari keheningan dan kejujuran warna hitam putih.',
+  keywords: 'interior, keheningan, hitam putih, fotografi, judynata, solitude, abstraksi, visual, seni, makna, emosi',
+  image: judyPortrait,
+  url: 'https://judynatafotografi.com/',
+  type: 'website'
+});
 
 const aboutParagraphs = [
   'Kamera saku tak pernah absen dari genggamannya; ia adalah kawan setia ke mana pun kaki melangkah.',

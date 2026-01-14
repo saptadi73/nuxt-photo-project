@@ -282,6 +282,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter, useRuntimeConfig } from '#app'
+import cityimage from '~/assets/images/cityscape6.jpg';
+import { useSEO } from '~/composables/useSEO';
+
+
+// SEO Setup
+useSEO({
+  title: 'Pilih Foto | Judynata Fotografi',
+  description: 'Menyelami ruang hening, di mana cahaya hitam putih merangkum emosi yang tidak terucap. Empat hal dibawah ini merangkum lintasan ide Judynata tentang solitude, abstraksi, dan ketulusan visual.',
+  keywords: 'keheningan, hitam putih, fotografi, judynata, solitude, abstraksi, visual, seni, makna, emosi',
+  image: cityimage,
+  url: 'https://judynatafotografi.com/',
+  type: 'website'
+});
 
 // CONFIGURATION
 const config = useRuntimeConfig()

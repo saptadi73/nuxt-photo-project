@@ -166,8 +166,19 @@ import interior7 from '~/assets/images/interior/interior7.jpg';
 import interior8 from '~/assets/images/interior/interior8.jpg';
 import interior9 from '~/assets/images/interior/interior9.jpg';
 import interior91 from '~/assets/images/interior/interior91.jpg';
+import { useSEO } from '~/composables/useSEO';
 
 const selectedIndex = ref<number | null>(null);
+
+  // SEO Setup
+useSEO({
+  title: 'Interior | Judynata Fotografi',
+  description: 'Keindahan Interior dengan Hiasan Foto Dinding Monokromatik yang Syahdu dan Elegan',
+  keywords: 'interior, keheningan, hitam putih, fotografi, judynata, solitude, abstraksi, visual, seni, makna, emosi',
+  image: interior7,
+  url: 'https://judynatafotografi.com/',
+  type: 'website'
+});
 
 const interiorItems = [
   {
