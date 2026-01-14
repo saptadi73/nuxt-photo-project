@@ -46,7 +46,7 @@
           <h2 class="font-caveat text-4xl text-slate-900">Keheningan yang Bicara</h2>
           <div class="h-[1px] w-full bg-gray-300" />
         </div>
-        <p class="hidden text-sm text-gray-500 lg:block">Tersirat sejuta makna, menyingkap banyak makna</p>
+        <p class="hidden text-sm text-gray-500 lg:block">Menyisir Keheningan, menangkap hitam Putih, menyingkap banyak makna</p>
       </div>
 
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">

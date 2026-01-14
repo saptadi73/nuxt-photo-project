@@ -122,7 +122,7 @@
             <div v-else>
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 p-6">
                 <div v-for="photo in paginatedPhotos" :key="photo.id" class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300">
-                <div class="relative h-52 bg-gray-100 overflow-hidden rounded-t-2xl">
+                <div class="relative h-52 bg-gray-100 overflow-hidden rounded-t-2xl cursor-pointer" @click="openPhotoModal(photo)">
                   <img :src="getPhotoImageUrl(photo)" :alt="photo.judul" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                   <div class="absolute top-3 left-3 bg-white/90 px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wide text-slate-900">{{ photo.kategori?.nama }}</div>
                 </div>
@@ -222,11 +222,102 @@
         </div>
       </section>
     </main>
+
+    <!-- Modal View Foto -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div v-if="showPhotoModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80" @click="closePhotoModal">
+          <div class="relative max-w-5xl w-full max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden" @click.stop>
+            <!-- Close Button -->
+            <button @click="closePhotoModal" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-200">
+              <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+
+            <div class="flex flex-col md:flex-row">
+              <!-- Image Section -->
+              <div class="flex-1 bg-gray-100 flex items-center justify-center p-6 md:p-8">
+                <img v-if="selectedPhoto" :src="getPhotoWatermarkUrl(selectedPhoto)" :alt="selectedPhoto.judul" class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-lg" />
+              </div>
+
+              <!-- Info Section -->
+              <div class="w-full md:w-96 p-6 md:p-8 space-y-4 overflow-y-auto max-h-[90vh]">
+                <div v-if="selectedPhoto">
+                  <!-- Category Badge -->
+                  <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wide mb-3">
+                    {{ selectedPhoto.kategori?.nama || 'Uncategorized' }}
+                  </div>
+
+                  <!-- Title -->
+                  <h2 class="text-2xl font-bold text-slate-900 mb-2">{{ selectedPhoto.judul }}</h2>
+
+                  <!-- Price -->
+                  <div class="flex items-baseline gap-2 mb-4">
+                    <span class="text-3xl font-black text-slate-900">Rp {{ formatPrice(selectedPhoto.harga) }}</span>
+                    <span class="text-sm text-gray-500">/ foto</span>
+                  </div>
+
+                  <!-- Description -->
+                  <div v-if="selectedPhoto.deskripsi" class="mb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">{{ selectedPhoto.deskripsi }}</p>
+                  </div>
+
+                  <!-- Divider -->
+                  <div class="border-t border-gray-200 my-4"></div>
+
+                  <!-- Photo Options -->
+                  <div class="space-y-3">
+                    <div class="space-y-2">
+                      <label class="text-sm font-semibold text-gray-700">Jenis Cetak</label>
+                      <select v-model="getPhotoOption(selectedPhoto.id).jenis_cetak" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900">
+                        <option v-for="opt in jenisCetakOptions" :key="opt" :value="opt">{{ opt }}</option>
+                      </select>
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-sm font-semibold text-gray-700">Jumlah</label>
+                      <input v-model.number="getPhotoOption(selectedPhoto.id).qty" type="number" min="1" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900" />
+                    </div>
+                  </div>
+
+                  <!-- Add Button -->
+                  <button
+                    @click="addPhotoFromModal"
+                    :disabled="!selectedPackage || remainingSlots <= 0"
+                    class="w-full mt-6 py-3 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                  >
+                    Tambah ke Paket
+                  </button>
+
+                  <!-- Remaining Slots Info -->
+                  <div v-if="selectedPackage" class="mt-4 p-3 bg-slate-50 rounded-lg">
+                    <p class="text-sm text-slate-700">Sisa kuota: <strong class="font-bold">{{ remainingSlots }}</strong> foto</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted, watch } from 'vue'
+import  { useSEO } from '~/composables/useSEO';
+import cityimage from '~/assets/images/cityscape6.jpg';
+
+
+// SEO Setup
+useSEO({
+  title: 'Pesan Paket sewa | Judynata Fotografi',
+  description: 'Melayani Paket Sewa Foto Bulanan yang bisa dimanfaatkan untuk paket kebutuhan interior usaha anda dengan harga kompetitif dengan variasi foto beragam.',
+  keywords: 'Paket Sewa, keheningan, hitam putih, fotografi, judynata, solitude, abstraksi, visual, seni, makna, emosi',
+  image: cityimage,
+  url: 'https://judynatafotografi.com/',
+  type: 'website'
+});
 
 const config = useRuntimeConfig()
 const BASE_URL = config.public.apiBaseUrl || 'http://localhost:8000'
@@ -240,6 +331,8 @@ const isSubmitting = ref(false)
 const submitMessage = ref('')
 const submitSuccess = ref(false)
 const packageWarning = ref('')
+const showPhotoModal = ref(false)
+const selectedPhoto = ref<any>(null)
 
 const searchQuery = ref('')
 const selectedCategory = ref('')
@@ -523,9 +616,60 @@ const getPhotoImageUrl = (photo: any) => {
   return `${BASE_URL}${photo.url_thumbnail}`
 }
 
+const getPhotoWatermarkUrl = (photo: any) => {
+  if (!photo.url_watermark) return 'https://placehold.co/800x600?text=No+Image'
+  return `${BASE_URL}${photo.url_watermark}`
+}
+
+const openPhotoModal = (photo: any) => {
+  selectedPhoto.value = photo
+  showPhotoModal.value = true
+}
+
+const closePhotoModal = () => {
+  showPhotoModal.value = false
+  selectedPhoto.value = null
+}
+
+const addPhotoFromModal = () => {
+  if (selectedPhoto.value) {
+    addPhoto(selectedPhoto.value)
+    if (!packageWarning.value) {
+      closePhotoModal()
+    }
+  }
+}
+
 onMounted(() => {
   prefillBuyer()
   loadPackages()
   loadPhotos()
 })
 </script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active .relative,
+.modal-leave-active .relative {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-enter-from .relative {
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+.modal-leave-to .relative {
+  transform: scale(0.9);
+  opacity: 0;
+}
+</style>

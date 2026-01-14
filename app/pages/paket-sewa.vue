@@ -156,8 +156,8 @@ const BASE_URL = config.public.apiBaseUrl || 'http://localhost:8000'
 // SEO Setup
 useSEO({
   title: 'Paket Sewa | Judynata Fotografi',
-  description: 'Menyelami ruang hening, di mana cahaya hitam putih merangkum emosi yang tidak terucap. Empat hal dibawah ini merangkum lintasan ide Judynata tentang solitude, abstraksi, dan ketulusan visual.',
-  keywords: 'keheningan, hitam putih, fotografi, judynata, solitude, abstraksi, visual, seni, makna, emosi',
+  description: 'Melayani Paket Sewa Foto Bulanan yang bisa dimanfaatkan untuk paket kebutuhan interior usaha anda dengan harga kompetitif dengan variasi foto beragam.',
+  keywords: 'paket sewa, keheningan, hitam putih, fotografi, judynata, solitude, abstraksi, visual, seni, makna, emosi',
   image: heroImage,
   url: 'https://judynatafotografi.com/',
   type: 'website'
