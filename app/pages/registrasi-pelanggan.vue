@@ -325,7 +325,11 @@ const handleRegister = async () => {
 
     // Call Member Registration API endpoint
     // POST /member/register
-    const response = await fetch('http://localhost:8000/member/register', {
+    const config = useRuntimeConfig()
+    const apiBaseUrl = config.public.apiBaseUrl || 'http://localhost:8080'
+    const registerUrl = `${apiBaseUrl}/member/register`
+    
+    const response = await fetch(registerUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

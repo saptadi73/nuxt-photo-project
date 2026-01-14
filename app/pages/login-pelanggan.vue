@@ -125,6 +125,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
+import { useDebugLogger } from '~/composables/useDebugLogger'
+
+const logger = useDebugLogger('LoginPelanggan')
 
 const isLoggedIn = ref(false)
 const memberName = ref('')
@@ -139,21 +142,29 @@ const loginForm = ref({
 
 // Watch for login state changes
 watch(isLoggedIn, (newVal) => {
-  console.log('isLoggedIn changed to:', newVal)
+  logger.debug('isLoggedIn changed to:', { isLoggedIn: newVal })
 })
 
 // Check if user is already logged in
 onMounted(() => {
+  logger.info('Component mounted - checking login state')
+  
   if (typeof window !== 'undefined') {
     const memberToken = localStorage.getItem('memberToken')
     const savedName = localStorage.getItem('memberName')
     
-    console.log('Component mounted. Token:', memberToken ? 'exists' : 'null', 'Name:', savedName)
+    logger.debug('LocalStorage check:', { 
+      hasToken: !!memberToken,
+      tokenLength: memberToken?.length || 0,
+      savedName: savedName || 'null'
+    })
     
     if (memberToken && savedName) {
       isLoggedIn.value = true
       memberName.value = savedName
-      console.log('User already logged in. Setting welcome state.')
+      logger.info('User already logged in', { memberName: savedName })
+    } else {
+      logger.info('User not logged in - showing login form')
     }
   }
 })
@@ -163,18 +174,27 @@ const handleLogin = async () => {
   errorMessage.value = ''
   isLoading.value = true
 
+  logger.info('Login attempt started', { 
+    email: loginForm.value.email,
+    apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
+  })
+
   try {
-    // Call Member Login API endpoint
-    // POST /member/login
-    console.log('=== LOGIN REQUEST ===')
-    console.log('URL:', 'http://localhost:8000/member/login')
-    console.log('Email:', loginForm.value.email)
-    console.log('Password:', '***hidden***')
+    const apiBaseUrl = process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
+    const loginUrl = `${apiBaseUrl}/member/login`
     
-    const response = await fetch('http://localhost:8000/member/login', {
+    logger.debug('LOGIN REQUEST', {
+      url: loginUrl,
+      method: 'POST',
+      email: loginForm.value.email,
+      hasPassword: !!loginForm.value.password
+    })
+    
+    const response = await fetch(loginUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify({
         email: loginForm.value.email,
@@ -182,100 +202,204 @@ const handleLogin = async () => {
       })
     })
 
-    console.log('=== LOGIN RESPONSE ===')
-    console.log('Status:', response.status)
-    console.log('Status Text:', response.statusText)
-    console.log('OK:', response.ok)
+    logger.debug('LOGIN RESPONSE - HTTP Status', {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      headers: {
+        contentType: response.headers.get('content-type'),
+        server: response.headers.get('server')
+      }
+    })
 
-    const result = await response.json()
-    console.log('=== RESPONSE DATA ===')
-    console.log('Full Response:', result)
-    console.log('Status:', result.status)
-    console.log('Message:', result.message)
-    console.log('Data:', result.data)
-    console.log('Data.token:', result.data?.token ? 'EXISTS' : 'NULL')
-    console.log('Data.member:', result.data?.member)
+    let result
+    try {
+      result = await response.json()
+    } catch (parseError) {
+      logger.error('Failed to parse JSON response', { 
+        error: parseError,
+        responseText: await response.text()
+      })
+      throw new Error('Invalid JSON response from server')
+    }
 
-    // Check if login is successful based on result.status and token exists
+    logger.debug('RESPONSE DATA - Full Response', {
+      status: result.status,
+      message: result.message,
+      hasData: !!result.data,
+      hasToken: !!result.data?.token,
+      hasMember: !!result.data?.member,
+      memberFields: result.data?.member ? Object.keys(result.data.member) : []
+    })
+
+    // Detailed member data logging
+    if (result.data?.member) {
+      logger.debug('Member Data Structure', {
+        id: result.data.member.id,
+        email: result.data.member.email,
+        nama: result.data.member.nama,
+        no_hp: result.data.member.no_hp || 'missing',
+        alamat: result.data.member.alamat || 'missing',
+        kota: result.data.member.kota || 'missing'
+      })
+    }
+
+    // Check if login is successful
     if (response.ok && result.status && result.data?.token && result.data?.member) {
-      // Save member JWT token (type='member')
       const memberData = result.data.member
       const token = result.data.token
       
-      console.log('=== LOGIN SUCCESS ===')
-      console.log('Member Data:', memberData)
-      console.log('Token:', token)
-      console.log('Member Name:', memberData.nama)
-      localStorage.setItem('memberToken', token)
-      localStorage.setItem('memberName', memberData.nama)
-      localStorage.setItem('memberEmail', memberData.email)
-      localStorage.setItem('memberId', memberData.id)
-      localStorage.setItem('memberIdMember', memberData.id_member)  // NEW: id_member
-      // Store additional member data for sales order form
-      localStorage.setItem('memberNoHp', memberData.no_hp || '')
-      localStorage.setItem('memberAlamat', memberData.alamat || '')
-      localStorage.setItem('memberKota', memberData.kota || '')
-      localStorage.setItem('memberProvinsi', memberData.provinsi || '')
-      localStorage.setItem('memberKodePos', memberData.kode_pos || '')
+      logger.info('LOGIN SUCCESS - Saving credentials', {
+        memberId: memberData.id,
+        memberName: memberData.nama,
+        tokenLength: token.length
+      })
 
-      // Set reactive state to show welcome page
+      // Save member data
+      try {
+        localStorage.setItem('memberToken', token)
+        localStorage.setItem('memberName', memberData.nama)
+        localStorage.setItem('memberEmail', memberData.email)
+        localStorage.setItem('memberId', memberData.id)
+        localStorage.setItem('memberIdMember', memberData.id_member || memberData.id)
+        localStorage.setItem('memberNoHp', memberData.no_hp || '')
+        localStorage.setItem('memberAlamat', memberData.alamat || '')
+        localStorage.setItem('memberKota', memberData.kota || '')
+        localStorage.setItem('memberProvinsi', memberData.provinsi || '')
+        localStorage.setItem('memberKodePos', memberData.kode_pos || '')
+
+        logger.debug('LocalStorage - All data saved successfully')
+
+        // Verify saved data
+        const verifyToken = localStorage.getItem('memberToken')
+        logger.debug('LocalStorage verification', {
+          tokenSavedCorrectly: verifyToken === token,
+          tokenLength: verifyToken?.length || 0
+        })
+      } catch (storageError) {
+        logger.error('Failed to save to localStorage', { error: storageError })
+        throw new Error('Failed to save login data')
+      }
+
+      // Update UI state
       memberName.value = memberData.nama
       isLoggedIn.value = true
       
-      console.log('=== STATE UPDATE ===')
-      console.log('isLoggedIn set to:', isLoggedIn.value)
-      console.log('memberName set to:', memberName.value)
-      console.log('Welcome page should now display')
-      
-      // Check if there are pending order photos
+      logger.info('UI State updated', {
+        isLoggedIn: isLoggedIn.value,
+        memberName: memberName.value
+      })
+
+      // Check for pending orders
       const pendingPhotos = localStorage.getItem('pendingOrderPhotos')
+      logger.debug('Checking for pending orders', { hasPending: !!pendingPhotos })
+
       if (pendingPhotos) {
-        // Redirect to sales-order page after a short delay
+        logger.info('Redirecting to sales-order with pending photos')
         setTimeout(() => {
           navigateTo({
             path: '/sales-order',
-            query: {
-              photos: pendingPhotos
-            }
+            query: { photos: pendingPhotos }
           })
         }, 1500)
+      } else {
+        logger.info('No pending orders - staying on welcome page')
       }
-      
+
       // Clear form
       loginForm.value.email = ''
       loginForm.value.password = ''
+      
     } else {
-      console.log('=== LOGIN FAILED ===')
-      console.log('Response:', result)
-      // Get error message from either result.message or result.data.message
-      errorMessage.value = result.data?.message || result.message || 'Email atau password salah.'
+      logger.warn('LOGIN FAILED - Invalid response', {
+        hasStatus: !!result.status,
+        hasToken: !!result.data?.token,
+        hasMember: !!result.data?.member,
+        fullResponse: result
+      })
+
+      const errorMsg = result.data?.message || result.message || 'Email atau password salah.'
+      errorMessage.value = errorMsg
+      logger.error('Login error message set', { errorMessage: errorMsg })
     }
   } catch (error) {
-    console.log('=== LOGIN ERROR ===')
-    console.error('Login error:', error)
-    errorMessage.value = 'Terjadi kesalahan koneksi. Silakan coba lagi.'
+    let errorMsg = 'Terjadi kesalahan koneksi. Silakan coba lagi.'
+    let errorDetails: any = {}
+
+    // Detect error type
+    if (error instanceof TypeError) {
+      // TypeError usually means network error or CORS
+      const errorMessageLower = (error as Error).message.toLowerCase()
+      
+      if (errorMessageLower.includes('failed to fetch')) {
+        errorMsg = '❌ Gagal terhubung ke server. Kemungkinan:\n1. API server tidak running\n2. CORS tidak diaktifkan\n3. Network error'
+        errorDetails.cause = 'Network/CORS Error - Failed to fetch'
+      } else if (errorMessageLower.includes('cors')) {
+        errorMsg = '❌ CORS Error: Server tidak mengizinkan request dari domain ini'
+        errorDetails.cause = 'CORS Policy Violation'
+      } else if (errorMessageLower.includes('timeout')) {
+        errorMsg = '❌ Timeout: Server tidak merespons dalam waktu yang ditentukan'
+        errorDetails.cause = 'Request Timeout'
+      } else {
+        errorMsg = `❌ Network Error: ${error.message}`
+        errorDetails.cause = error.message
+      }
+    } else if (error instanceof Error) {
+      errorMsg = `❌ Error: ${error.message}`
+      errorDetails.cause = error.message
+    }
+
+    logger.error('LOGIN EXCEPTION - DETAILED', {
+      errorType: error instanceof Error ? error.constructor.name : typeof error,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : 'no stack',
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+      ...errorDetails
+    })
+
+    console.error('%c❌ LOGIN FAILED - Network/Connection Error', 'color: #ff0000; font-weight: bold; font-size: 14px;', {
+      error: error,
+      errorMessage: errorMsg,
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+      timestamp: new Date().toISOString()
+    })
+
+    errorMessage.value = errorMsg
   } finally {
     isLoading.value = false
+    logger.info('Login attempt completed', { isLoading: isLoading.value })
   }
 }
 
 // Handle Logout
 const handleLogout = () => {
+  logger.info('Logout initiated')
+  
   if (typeof window !== 'undefined') {
-    localStorage.removeItem('memberToken')
-    localStorage.removeItem('memberName')
-    localStorage.removeItem('memberEmail')
-    localStorage.removeItem('memberId')
-    localStorage.removeItem('memberIdMember')  // NEW: remove id_member
-    localStorage.removeItem('memberNoHp')
-    localStorage.removeItem('memberAlamat')
-    localStorage.removeItem('memberKota')
-    localStorage.removeItem('memberProvinsi')
-    localStorage.removeItem('memberKodePos')
+    const keysToRemove = [
+      'memberToken',
+      'memberName',
+      'memberEmail',
+      'memberId',
+      'memberIdMember',
+      'memberNoHp',
+      'memberAlamat',
+      'memberKota',
+      'memberProvinsi',
+      'memberKodePos'
+    ]
+    
+    keysToRemove.forEach(key => {
+      localStorage.removeItem(key)
+    })
+    
+    logger.debug('All member data cleared from localStorage')
     
     isLoggedIn.value = false
     memberName.value = ''
     errorMessage.value = ''
+    
+    logger.info('Logout completed - UI state reset')
   }
 }
 </script>
